@@ -1,0 +1,24 @@
+rclone:
+    image: rclone/rclone:latest
+    restart: unless-stopped
+    container_name: rclone
+    depends_on:
+      - minio
+    command: >
+      mount minio:media /mnt/media
+        --allow-other
+        --rc --allow-non-empty --vfs-cache-mode full --vfs-cache-max-size 1G
+        --dir-cache-time 1000h
+        --poll-interval 15s
+        --cache-dir /cache
+        
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - media:/mnt/media
+      - rclone_cache:/cache
+      - ./rclone.conf:/config/rclone/rclone.conf
