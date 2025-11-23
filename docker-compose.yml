@@ -19,6 +19,7 @@ services:
         retries: 3
         timeout: 5s
 
+  #Dans confif/config/network.xml Dans la balise BaseUrl, ajouter l'endpoint voulu
   jellyfin:
     image: jellyfin/jellyfin
     container_name: jellyfin
@@ -29,11 +30,51 @@ services:
     volumes:
       - ./config:/config
       - ./cache:/cache
-      - ./media:/media
+      - ./droppydata:/media
+      #- /media/hugo/Acer1/media:/media
     restart: 'unless-stopped'
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+
+  droppy:
+    image: ghcr.io/droppyjs/droppy
+    container_name: droppy
+    ports:
+      - 8989:8989
+    volumes:
+      - ./droppyconfig:/config
+      - ./droppydata:/files
+
+  projectsend:
+    image: lscr.io/linuxserver/projectsend
+    container_name: projectsend
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - MAX_UPLOAD=5000
+    volumes:
+      - ./projectsendconfig:/config
+      - ./projectsenddata:/data
+    ports:
+      - 8444:80
+
+  mariadb:
+    image: lscr.io/linuxserver/mariadb
+    container_name: mariadb
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=projectsend
+      - MYSQL_USER=hugo
+      - MYSQL_PASSWORD=hugo
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mariadbconfig:/config
 
 volumes:
   rclone_cache:

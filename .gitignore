@@ -1,3 +1,8 @@
 media/
 config/
 cache/
+droppyconfig/
+droppydata/
+mariadbconfig/
+projectsendconfig/
+projectsenddata/
