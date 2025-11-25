@@ -1,0 +1,9 @@
+services:
+  droppy:
+    image: ghcr.io/droppyjs/droppy
+    container_name: droppy
+    ports:
+      - 8989:8989
+    volumes:
+      - ./config:/config
+      - /path/to/data:/files

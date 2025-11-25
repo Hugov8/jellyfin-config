@@ -6,3 +6,5 @@ droppydata/
 mariadbconfig/
 projectsendconfig/
 projectsenddata/
+wireguard_server/*.conf
+ggl-sheet.sh

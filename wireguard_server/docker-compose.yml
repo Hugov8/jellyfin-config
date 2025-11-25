@@ -1,0 +1,22 @@
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - SERVERURL=zoltraak.ovh
+      - SERVERPORT=51820
+      - PEERS=RASPSERVER,TEL,PC
+      - PEERDNS=auto
+      - INTERNAL_SUBNET=<subnet>
+      - ALLOWEDIPS=0.0.0.0/0
+    volumes:
+      - /home/debian/wireguard/config:/config
+      - /lib/modules:/lib/modules
+    network_mode: host
+    restart: unless-stopped
